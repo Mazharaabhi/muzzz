@@ -1,0 +1,48 @@
+<div class="wo_settings_page wow_content">
+	<div class="avatar-holder addresses">
+		<img src="<?php echo $wo['setting']['avatar']?>" alt="<?php echo $wo['setting']['name']?> Profile Picture" class="avatar">
+		<div class="infoz">
+			<h5 title="<?php echo $wo['setting']['name']?>"><a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['setting']['username'] . '');?>" data-ajax="?link1=timeline&u=<?php echo $wo['setting']['username'] ?>"><?php echo $wo['setting']['name']?></a></h5>
+			<p><?php  echo $wo['lang']['my_info']; ?></p>
+		</div>
+	</div>
+	<hr>
+
+	<?php
+	if (!empty($wo['setting']['notification_settings'])) {
+		//$wo['setting']['notification_settings'] = unserialize(html_entity_decode($wo['setting']['notification_settings']));
+	}
+	?>
+	
+
+</div>
+<script type="text/javascript">
+	function DeleteUserFile(self) {
+		file = $(self).attr('data_link');
+		$('#download_steps_comp').fadeIn(500);
+		$('.ready_to_down_info').fadeOut(200);
+		$('.wo_settings_page .hiddddddddd').fadeIn(200);
+	}
+$(function() {
+  $('form.setting-general-form').ajaxForm({
+    url: Wo_Ajax_Requests_File() + '?f=download_info',
+    beforeSend: function() {
+      $('.setting-panel-mdbtn').attr('disabled', 'true');
+      $('.setting-panel-mdbtn').text("<?php echo $wo['lang']['please_wait']; ?>");
+      $('.wo_settings_page').find('.add_wow_loader').addClass('btn-loading');
+    },
+    success: function(data) {
+      scrollToTop();
+      $('.setting-panel-mdbtn').removeAttr('disabled');
+      $('.setting-panel-mdbtn').text("<?php echo $wo['lang']['generate_file']; ?>");
+      if (data.status == 200) {
+      	$('#download_steps_comp').slideUp(500);
+		$('.ready_to_down_info').fadeIn(200);
+		$('.ready_to_down_info p').html(data.message);
+		$('.wo_settings_page .hiddddddddd').fadeOut(200);
+      }
+      $('.wo_settings_page').find('.add_wow_loader').removeClass('btn-loading');
+    }
+  });
+});
+</script>

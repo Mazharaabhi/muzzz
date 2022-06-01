@@ -1,0 +1,32 @@
+<div class="wo_settings_page wow_content">
+	<div class="avatar-holder addresses">
+		<img src="<?php echo $wo['setting']['avatar']?>" alt="<?php echo $wo['setting']['name']?> Profile Picture" class="avatar">
+		<div class="infoz">
+			<h5 title="<?php echo $wo['setting']['name']?>"><a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['setting']['username'] . '');?>" data-ajax="?link1=timeline&u=<?php echo $wo['setting']['username'] ?>"><?php echo $wo['setting']['name']?></a></h5>
+			<p><?php echo $wo['lang']['my_addresses']; ?></p>
+		</div>
+	</div>
+	<hr>
+
+	
+</div>
+
+<script type="text/javascript">
+  function EditAddress(id) {
+		$('.modal_edit_address_modal_alert_'+id).empty();
+		$("#edit_address_modal_"+id).find('.btn-mat').removeAttr('disabled')
+		$("#edit_address_modal_"+id).find('.btn-mat').text("<?php echo $wo['lang']['edit']; ?>");
+		$('#edit_address_modal_'+id).modal('show');
+	}
+	function DeleteAddress(id,type = 'show') {
+		if (type == 'hide') {
+	      $('#delete-address').find('.btn-mat').attr('onclick', "DeleteAddress('"+id+"')");
+	      $('#delete-address').modal('show');
+	      return false;
+	    }
+	    $('.address_'+id).slideUp();
+		$('.address_'+id).remove();
+		$('#edit_address_modal_'+id).remove();
+		$.post(Wo_Ajax_Requests_File() + '?f=address&s=delete&hash=' + $('.main_session').val(), {id: id}, function(data, textStatus, xhr) {});
+	}
+</script>

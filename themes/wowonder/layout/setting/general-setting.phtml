@@ -1,0 +1,142 @@
+<div class="wo_settings_page wow_content">
+	<div class="avatar-holder">
+		<img src="<?php echo $wo['setting']['avatar']?>" alt="<?php echo $wo['setting']['name']?> Profile Picture" class="avatar">
+		<div class="infoz">
+			<h5 title="<?php echo $wo['setting']['name']?>"><a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['setting']['username'] . '');?>" data-ajax="?link1=timeline&u=<?php echo $wo['setting']['username'] ?>"><?php echo $wo['setting']['name']?></a></h5>
+			<p><?php echo $wo['lang']['general_setting']; ?></p>
+		</div>
+	</div>
+	<hr>
+		
+	
+</div>
+
+<div class="modal fade" id="confirm_updatin_user_date" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></button>
+				<h4 class="modal-title">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12" y2="17"></line></svg>
+					<?php echo $wo['lang']['important']; ?>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<p><?php echo $wo['lang']['unverify']; ?></p>
+			</div>
+			<div class="modal-footer">
+				<button id="delete-all-post" type="button" onclick="Wo_ConfirmUpdatingUserData();" class="btn  btn-main"><?php echo $wo['lang']['continue']; ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function() {
+	$("#usr_birthday").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		maxDate: new Date('<?php echo date('Y')-14; ?>-12-31'),
+		dateFormat: 'dd-mm-yy',
+		yearRange: "<?php echo date('Y')-129; ?>:<?php echo date('Y')-14; ?>",
+		prevText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>',
+		nextText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>'
+    });
+});
+function Wo_ShowUpgrades() {
+	$('.wo_sett_upgrade').addClass('hidden');
+	$('.show-upgrades').removeClass('hidden');
+}
+function Wo_ConfirmUpdatingUserData(){
+ $('form.setting-general-form').submit();
+ $("#confirm_updatin_user_date").modal('hide');
+}
+
+$(function() {
+
+  $("#update_user_data").click(function(event) {
+	if ('<?php echo $wo['setting']['username']?>' != $('#username').val() && '<?php echo $wo['setting']['verified']?>' == 1) {
+        event.preventDefault();
+        $("#confirm_updatin_user_date").modal('show');
+    }
+  });
+
+  $('form.setting-general-form').ajaxForm({
+    url: Wo_Ajax_Requests_File() + '?f=update_general_settings',
+    beforeSend: function() {
+	  $('.wo_settings_page').find('.add_wow_loader').addClass('btn-loading');
+    },
+    success: function(data) {
+      scrollToTop();
+      if (data.status == 200) {
+      	if (data.type == 'phone' || data.type == 'email') {
+      		// if (data.type == 'email') {
+      		// 	$('#two_factor_title').html("<?php echo $wo['lang']['confirmation_email_sent']; ?>");
+      		// 	$('#two_factor_desc').html("<?php echo $wo['lang']['confirmation_email']; ?>");
+      		// }
+      		// else{
+      		// 	$('#two_factor_title').html("<?php echo $wo['lang']['confirmation_message_sent']; ?>");
+      		// 	$('#two_factor_desc').html("<?php echo $wo['lang']['confirmation_message']; ?>");
+      		// }
+      		$('#verify_email_phone').modal('show');
+      	}
+      	else{
+	        <?php if($wo['user']['user_id'] == $wo['setting']['user_id']) { ?>
+	        <?php if ($wo['config']['node_socket_flow'] == "1") { ?>
+	        		socket.emit("on_name_changed", {from_id: _getCookie("user_id"), name: data.username_or});
+            <?php } ?>
+	        $('[id^=update-username]').attr('href', data.username);
+	        <?php } ?>
+	        $('.setting-general-alert').html('<div class="alert alert-success">' + data.message + '</div>');
+	        $('.alert-success').fadeIn('fast', function() {
+	           $(this).delay(2500).slideUp(500, function() {
+	              $(this).remove();
+	            });
+	        });
+	    }
+      } else if (data.errors) {
+          var errors = data.errors.join("<br>");
+          $('.setting-general-alert').html('<div class="alert alert-danger">' + errors + '</div>');
+          $('.alert-danger').fadeIn(300);
+      }
+      $('.wo_settings_page').find('.add_wow_loader').removeClass('btn-loading');
+    }
+  });
+
+    $('form.verify_email_phone_form').ajaxForm({
+    url: Wo_Ajax_Requests_File() + '?f=verify_email_phone',
+    beforeSend: function() {
+      $('#verify_email_phone_form_btn').text('<?php echo($wo['lang']['please_wait']) ?>');
+    },
+    success: function(data) {
+      if (data.status == 200) {
+        $('#verify_email_phone_form_alert').html('<div class="alert alert-success">' + data.message + '</div>');
+        $('#verify_email_phone_form_alert').fadeIn('fast', function() {
+          $(this).delay(2500).slideUp(500, function() {
+              $(this).remove();
+              $('#verify_email_phone').modal('hide');
+              location.reload();
+          });
+        });
+      } else if (data.status == 400) {
+        $('#verify_email_phone_form_alert').html('<div class="alert alert-danger">' + data.message + '</div>');
+        $('.alert-danger').fadeIn(300);
+      }
+      $('#verify_email_phone_form_btn').text('<?php echo($wo['lang']['send']) ?>');
+    }
+  });
+});
+
+function Wo_GetPayPal() {
+   type = $('#upgrade').val();
+   $('#upgrade-button').html("<?php echo $wo['lang']['please_wait']?>");
+   $.post(Wo_Ajax_Requests_File() + '?f=get_paypal_url', {type:type, type2:'upgrade'}, function (data) {
+    if (data.status == 200) {
+       window.location.href = data.url;
+    } else {
+      $('#upgrade-button').html('<?php echo $wo["lang"]["upgrade"]?>');
+      $('.please-wait').removeClass('hidden').find('#please-wait').text('<?php echo $wo["lang"]["error_please_try_again"]?>');
+    }
+   });
+}
+</script>

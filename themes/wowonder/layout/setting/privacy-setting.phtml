@@ -1,0 +1,34 @@
+<div class="wo_settings_page wow_content">
+	<div class="avatar-holder security">
+		<img src="<?php echo $wo['setting']['avatar']?>" alt="<?php echo $wo['setting']['name']?> Profile Picture" class="avatar">
+		<div class="infoz">
+			<h5 title="<?php echo $wo['setting']['name']?>"><a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['setting']['username'] . '');?>" data-ajax="?link1=timeline&u=<?php echo $wo['setting']['username'] ?>"><?php echo $wo['setting']['name']?></a></h5>
+			<p><?php echo $wo['lang']['privacy_setting']; ?></p>
+		</div>
+	</div>
+	<hr>
+
+	
+</div>
+<script type="text/javascript">
+$(function() {
+  $('form.setting-privacy-form').ajaxForm({
+    url: Wo_Ajax_Requests_File() + '?f=update_privacy_settings',
+    beforeSend: function() {
+      $('.wo_settings_page').find('.add_wow_loader').addClass('btn-loading');
+    },
+    success: function(data) {
+      scrollToTop();
+      if (data.status == 200) {
+        $('.setting-privacy-alert').html('<div class="alert alert-success">' + data.message + '</div>');
+        $('.alert-success').fadeIn('fast', function() {
+          $(this).delay(2500).slideUp(500, function() {
+            $(this).remove();
+          });
+        });
+      } 
+      $('.wo_settings_page').find('.add_wow_loader').removeClass('btn-loading');
+    }
+  });
+});
+</script>

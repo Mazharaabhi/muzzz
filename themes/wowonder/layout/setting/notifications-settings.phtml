@@ -1,0 +1,54 @@
+<div class="wo_settings_page wow_content">
+	<div class="avatar-holder notifications">
+		<img src="<?php echo $wo['setting']['avatar']?>" alt="<?php echo $wo['setting']['name']?> Profile Picture" class="avatar">
+		<div class="infoz">
+			<h5 title="<?php echo $wo['setting']['name']?>"><a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['setting']['username'] . '');?>" data-ajax="?link1=timeline&u=<?php echo $wo['setting']['username'] ?>"><?php echo $wo['setting']['name']?></a></h5>
+			<p><?php echo $wo['lang']['notification_settings']; ?></p>
+		</div>
+	</div>
+	<hr>
+	
+	<?php if ($wo['config']['emailNotification'] == 1) {?>
+	<ul class="sett_tab_noti">
+		<li class="active" dir="auto">
+			<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=notifications-settings');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=notifications-settings">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21M19.75,3.19L18.33,4.61C20.04,6.3 21,8.6 21,11H23C23,8.07 21.84,5.25 19.75,3.19M1,11H3C3,8.6 3.96,6.3 5.67,4.61L4.25,3.19C2.16,5.25 1,8.07 1,11Z" /></svg> <?php echo $wo['lang']['notification_settings'];?>
+			</a>
+		</li>
+		<li dir="auto">
+			<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=email-setting');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=email-setting">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" /></svg> <?php echo $wo['lang']['email_notification'];?>
+			</a>
+		</li>
+	</ul>
+	<?php } ?>
+	
+	<?php
+	if (!empty($wo['setting']['notification_settings'])) {
+		$wo['setting']['notification_settings'] = (Array) json_decode(html_entity_decode($wo['setting']['notification_settings']));
+	}
+	?>
+	
+</div>
+<script type="text/javascript">
+$(function() {
+  $('form.setting-general-form').ajaxForm({
+    url: Wo_Ajax_Requests_File() + '?f=update_notifications_settings',
+    beforeSend: function() {
+      $('.wo_settings_page').find('.add_wow_loader').addClass('btn-loading');
+    },
+    success: function(data) {
+      scrollToTop();
+      if (data.status == 200) {
+        $('.setting-general-alert').html('<div class="alert alert-success">' + data.message + '</div>');
+        $('.alert-success').fadeIn('fast', function() {
+           $(this).delay(2500).slideUp(500, function() {
+              $(this).remove();
+            });
+        });
+      } 
+      $('.wo_settings_page').find('.add_wow_loader').removeClass('btn-loading');
+    }
+  });
+});
+</script>

@@ -1,0 +1,47 @@
+<div class="wo_settings_page wow_content">
+	<div class="avatar-holder design">
+		<img src="<?php echo $wo['setting']['avatar']?>" alt="<?php echo $wo['setting']['name']?> Profile Picture" class="avatar">
+		<div class="infoz">
+			<h5 title="<?php echo $wo['setting']['name']?>"><a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['setting']['username'] . '');?>" data-ajax="?link1=timeline&u=<?php echo $wo['setting']['username'] ?>"><?php echo $wo['setting']['name']?></a></h5>
+			<p><?php echo $wo['lang']['design']; ?></p>
+		</div>
+	</div>
+	<hr>
+
+	
+</div>
+<script type="text/javascript">
+$(function() {
+  $("#background_image").change(function () {
+         var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
+         $(".avatar-read input").val(filename);
+         $(".avatar-read").slideDown(200);
+    });
+  $("#css_file").change(function () {
+         var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
+         $(".css_file-read input").val(filename);
+         $(".css_file-read").slideDown(200);
+    });
+  $('form.setting-profile-form').ajaxForm({
+    url: Wo_Ajax_Requests_File() + '?f=update_design_setting',
+    beforeSend: function() {
+      $('.wo_settings_page').find('.add_wow_loader').addClass('btn-loading');
+    },
+    success: function(data) {
+      if (data.status == 200) {
+        scrollToTop();
+        $('.setting-profile-alert').html('<div class="alert alert-success">' + data.message + '</div>');
+        $('.alert-success').fadeIn('fast', function() {
+          $(this).delay(2500).slideUp(500, function() {
+            $(this).remove();
+          });
+        });
+      } 
+      $('.wo_settings_page').find('.add_wow_loader').removeClass('btn-loading');
+    }
+  });
+  $("#background_image").on('change', function() {
+         $("#background_image_status-1").attr("checked", true);
+  });
+});
+</script>

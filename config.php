@@ -11,14 +11,14 @@
 // MySQL Hostname
 $sql_db_host = "localhost";
 // MySQL Database User
-$sql_db_user = "wwcontro_wwcontro";
+$sql_db_user = "root";
 // MySQL Database Password
-$sql_db_pass = "stigawetupak";
+$sql_db_pass = "";
 // MySQL Database Name
 $sql_db_name = "wwcontro_wwcontro";
 
 // Site URL
-$site_url = "https://wwcontrol.live"; // e.g (http://example.com)
+$site_url = "http://localhost/muzzz"; // e.g (http://example.com)
 
 // Purchase code
 $purchase_code = "csdcsdcsd"; // Your purchase code, don't give it to anyone.

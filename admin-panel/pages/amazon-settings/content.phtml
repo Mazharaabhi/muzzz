@@ -226,6 +226,7 @@ if (!isEnabled('shell_exec')) {
                 </div>
             </div>
         </div>
+
         <div class="col-lg-12 col-md-12">
             <h3>Storage & CDN Configuration <br><hr></h3>
              <div class="alert alert-warning">
@@ -420,6 +421,59 @@ if (!isEnabled('shell_exec')) {
                     </form>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Contabo Configuration</h6>
+                    <form class="contabo_storage-settings" method="POST">
+                        <div class="float-left">
+                            <label for="contabo_storage" class="main-label">Contabo Storage</label>
+                            <br><small class="admin-info">Enable Contabo Storage to store your files in Contabo Spaces.</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="contabo_storage" value="0" />
+                            <input type="checkbox" name="contabo_storage" id="chck-contabo_storage" value="1" <?php echo ($wo['config']['contabo_storage'] == 1) ? 'checked': '';?>>
+                            <label for="chck-contabo_storage" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Contabo Bucket Name</label>
+                                <input type="text" id="contabo_bucket_name" name="contabo_bucket_name" class="form-control" value="<?php echo $wo['config']['contabo_bucket_name']?>">
+                                <small class="admin-info">Your Contabo Bucket Name.</small>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Contabo Access Key</label>
+                                <input type="text" id="contabo_access_key" name="contabo_access_key" class="form-control" value="<?php echo $wo['config']['contabo_access_key']?>">
+                                <small class="admin-info">Your Contabo Access Key.</small>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Contabo Secret Key</label>
+                                <input type="text" id="contabo_secret_key" name="contabo_secret_key" class="form-control" value="<?php echo $wo['config']['contabo_secret_key']?>">
+                                <small class="admin-info">Your Contabo Secret Key.</small>
+                            </div>
+                        </div>
+                        <label for="wasabi_bucket_region">Contabo bucket region</label>
+                        <select class="form-control show-tick" id="contabo_bucket_region" name="contabo_bucket_region">
+                            <option value="us-west-1" <?php echo ($wo['config']['contabo_bucket_region'] == 'eu2')   ? ' selected' : '';?> >European Union (Germany)</option>
+
+                        </select>
+                        <div class="clearfix"></div>
+                        <br>
+                        <div class="alert alert-info">
+                            Before enabling Contabo, make sure you upload the whole "upload/" folder to your bucket. <br><br>
+                            Before disabling Contabo, make sure you download the whole "upload/" folder to your server. <br><br>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <div class="contabo_storage_alert"></div>
+                        <button type="button" class="btn btn-success m-t-15 waves-effect" onclick="Wo_TestContabo()">Test & Verify Connection</button>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="col-lg-6 col-md-6">
             <div class="card">
@@ -547,6 +601,39 @@ if (!isEnabled('shell_exec')) {
     </div>
     <!-- #END# Vertical Layout -->
 <script>
+function Wo_TestContabo() {
+        $('form.contabo_storage-settings').find('.btn-success').text('Please wait..');
+        $.get(Wo_Ajax_Requests_File(), {f:'admin_setting', s: 'test_contabo'}, function (data) {
+            console.log(data);
+            if (data.status == 200) {
+                $('.contabo_storage_alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Connection established!</div>');
+                setTimeout(function () {
+                    $('.contabo_storage_alert').empty();
+                }, 2000);
+            } else if (data.status == 300) {
+                $('.contabo_storage_alert').html('<div class="alert alert-danger">Bucket doesn\'t exists</div>');
+                setTimeout(function () {
+                    $('.contabo_storage_alert').empty();
+                }, 5000);
+            } else if (data.status == 500) {
+                $('.contabo_storage_alert').html('<div class="alert alert-danger">Your s3 account doesn\'t have any buckets, please create one.</div>');
+                setTimeout(function () {
+                    $('.contabo_storage_alert').empty();
+                }, 5000);
+            } else if (data.status == 400) {
+                $('.contabo_storage_alert').html('<div class="alert alert-danger">'+data.message+'</div>');
+                setTimeout(function () {
+                    $('.contabo_storage_alert').empty();
+                }, 5000);
+            } else  {
+                $('.contabo_storage_alert').html('<div class="alert alert-danger">Error while connecting to amazone, please check your details</div>');
+                setTimeout(function () {
+                    $('.contabo_storage_alert').empty();
+                }, 5000);
+            }
+            $('form.contabo_storage-settings').find('.btn-success').text('Test & Verify Connection');
+        });
+    }
 function Wo_TestWasabi() {
     $('form.wasabi_storage-settings').find('.btn-success').text('Please wait..');
     $.get(Wo_Ajax_Requests_File(), {f:'admin_setting', s: 'test_wasabi'}, function (data) {

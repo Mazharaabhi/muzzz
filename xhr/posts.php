@@ -302,12 +302,14 @@ if ($f == 'posts') {
                         $fileInfo['is_video'] = 1;
                     }
                     $amazone_s3                   = $wo['config']['amazone_s3'];
+                    $contabo_storage                   = $wo['config']['contabo_storage'];
                     $wasabi_storage                   = $wo['config']['wasabi_storage'];
                     $ftp_upload                   = $wo['config']['ftp_upload'];
                     $spaces                       = $wo['config']['spaces'];
                     $cloud_upload                 = $wo['config']['cloud_upload'];
                     $wo['config']['amazone_s3']   = 0;
                     $wo['config']['wasabi_storage']   = 0;
+                    $wo['config']['contabo_storage']   = 0;
                     $wo['config']['ftp_upload']   = 0;
                     $wo['config']['spaces']       = 0;
                     $wo['config']['cloud_upload'] = 0;
@@ -315,6 +317,7 @@ if ($f == 'posts') {
                 $media = Wo_ShareFile($fileInfo);
                 if ($wo['config']['ffmpeg_system'] == 'on') {
                     $wo['config']['amazone_s3']   = $amazone_s3;
+                    $wo['config']['contabo_storage']   = $contabo_storage;
                     $wo['config']['wasabi_storage']   = $wasabi_storage;
                     $wo['config']['ftp_upload']   = $ftp_upload;
                     $wo['config']['spaces']       = $spaces;

@@ -1349,7 +1349,7 @@ function makeFTPdir($ftp, $dir) {
 use Google\Cloud\Storage\StorageClient;
 function Wo_UploadToS3($filename, $config = array()) {
     global $wo;
-    if ($wo['config']['amazone_s3'] == 0 && $wo['config']['ftp_upload'] == 0 && $wo['config']['spaces'] == 0 && $wo['config']['cloud_upload'] == 0 && $wo['config']['wasabi_storage'] == 0) {
+    if ($wo['config']['amazone_s3'] == 0 && $wo['config']['ftp_upload'] == 0 && $wo['config']['spaces'] == 0 && $wo['config']['cloud_upload'] == 0 && $wo['config']['wasabi_storage'] == 0 && $wo['config']['contabo_storage'] == 0) {
         return false;
     }
     if ($wo['config']['ftp_upload'] == 1) {
@@ -1391,7 +1391,8 @@ function Wo_UploadToS3($filename, $config = array()) {
             }
             $ftp->close();
         }
-    } else if ($wo['config']['amazone_s3'] == 1) {
+    }
+    else if ($wo['config']['amazone_s3'] == 1) {
         if (empty($wo['config']['amazone_s3_key']) || empty($wo['config']['amazone_s3_s_key']) || empty($wo['config']['region']) || empty($wo['config']['bucket_name'])) {
             return false;
         }
@@ -1421,7 +1422,40 @@ function Wo_UploadToS3($filename, $config = array()) {
         } else {
             return true;
         }
-    } else if ($wo['config']['wasabi_storage'] == 1) {
+    }
+    else if ($wo['config']['contabo_storage'] == 1) {
+        if (empty($wo['config']['contabo_access_key']) || empty($wo['config']['contabo_secret_key']) || empty($wo['config']['contabo_bucket_region']) || empty($wo['config']['contabo_bucket_name'])) {
+            return false;
+        }
+        include_once('assets/libraries/s3/vendor/autoload.php');
+        $s3= new S3Client([
+            'version' => 'latest',
+            'region'  => $wo['config']['contabo_bucket_region'],
+            "endpoint" =>'https://eu2.contabostorage.com/',
+            'credentials' => array(
+                'key' => $wo['config']['contabo_access_key'],
+                'secret' => $wo['config']['contabo_secret_key']
+            ),
+            'use_path_style_endpoint' => true
+        ]);
+        $s3->putObject(array(
+            'Bucket' => $wo['config']['contabo_bucket_name'],
+            'Key' => $filename,
+            'Body' => fopen($filename, 'r+'),
+            'ACL' => 'public-read',
+            'CacheControl' => 'max-age=3153600'
+        ));
+        if (empty($config['delete'])) {
+            if ($s3->doesObjectExist($wo['config']['contabo_bucket_name'], $filename)) {
+                if (empty($config['amazon'])) {
+                    @unlink($filename);
+                }
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }else if ($wo['config']['wasabi_storage'] == 1) {
         if (empty($wo['config']['wasabi_bucket_name']) || empty($wo['config']['wasabi_access_key']) || empty($wo['config']['wasabi_secret_key']) || empty($wo['config']['wasabi_bucket_region'])) {
             return false;
         }
@@ -1506,7 +1540,7 @@ function Wo_UploadToS3($filename, $config = array()) {
 }
 function Wo_DeleteFromToS3($filename, $config = array()) {
     global $wo;
-    if ($wo['config']['amazone_s3'] == 0 && $wo['config']['ftp_upload'] == 0 && $wo['config']['spaces'] == 0 && $wo['config']['cloud_upload'] == 0 && $wo['config']['amazone_s3_2'] == 0 && $wo['config']['wasabi_storage'] == 0) {
+    if ($wo['config']['amazone_s3'] == 0 && $wo['config']['ftp_upload'] == 0 && $wo['config']['spaces'] == 0 && $wo['config']['cloud_upload'] == 0 && $wo['config']['amazone_s3_2'] == 0 && $wo['config']['wasabi_storage'] == 0 && $wo['config']['contabo_storage'] == 0) {
         return false;
     }
     if ($wo['config']['ftp_upload'] == 1) {
@@ -1533,7 +1567,8 @@ function Wo_DeleteFromToS3($filename, $config = array()) {
                 return true;
             }
         }
-    } else if ($wo['config']['amazone_s3'] == 1) {
+    }
+    else if ($wo['config']['amazone_s3'] == 1) {
         include_once('assets/libraries/s3/vendor/autoload.php');
         if (empty($wo['config']['amazone_s3_key']) || empty($wo['config']['amazone_s3_s_key']) || empty($wo['config']['region']) || empty($wo['config']['bucket_name'])) {
             return false;
@@ -1553,7 +1588,32 @@ function Wo_DeleteFromToS3($filename, $config = array()) {
         if (!$s3->doesObjectExist($wo['config']['bucket_name'], $filename)) {
             return true;
         }
-    } else if ($wo['config']['wasabi_storage'] == 1) {
+    }
+
+    else if ($wo['config']['contabo_storage'] == 1) {
+        include_once('assets/libraries/s3/vendor/autoload.php');
+        if (empty($wo['config']['contabo_access_key']) || empty($wo['config']['contabo_secret_key']) || empty($wo['config']['contabo_bucket_region']) || empty($wo['config']['contabo_bucket_name'])) {
+            return false;
+        }
+        $s3= new S3Client([
+            'version' => 'latest',
+            'region'  => $wo['config']['contabo_bucket_region'],
+            "endpoint" =>'https://eu2.contabostorage.com/',
+            'credentials' => array(
+                'key' => $wo['config']['contabo_access_key'],
+                'secret' => $wo['config']['contabo_secret_key']
+            ),
+            'use_path_style_endpoint' => true
+        ]);
+        $s3->deleteObject(array(
+            'Bucket' => $wo['config']['contabo_bucket_name'],
+            'Key' => $filename
+        ));
+        if (!$s3->doesObjectExist($wo['config']['contabo_bucket_name'], $filename)) {
+            return true;
+        }
+    }
+    else if ($wo['config']['wasabi_storage'] == 1) {
         include_once('assets/libraries/s3/vendor/autoload.php');
         if (empty($wo['config']['wasabi_bucket_name']) || empty($wo['config']['wasabi_access_key']) || empty($wo['config']['wasabi_secret_key']) || empty($wo['config']['wasabi_bucket_region'])) {
             return false;

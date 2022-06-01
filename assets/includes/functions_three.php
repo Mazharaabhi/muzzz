@@ -4867,7 +4867,7 @@ function Wo_DeleteStatus($id) {
             if (file_exists($path)) {
                 @unlink($path);
                 @unlink(trim($media_2));
-            } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+            } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                 @Wo_DeleteFromToS3($path);
                 @Wo_DeleteFromToS3($media_2);
             }
@@ -8208,7 +8208,7 @@ function FFMPEGUpload($data) {
     $data['post_data']['postFile'] = $video_path_240;
     $data['id']                    = Wo_RegisterPost($data['post_data']);
     if (file_exists($video_output_full_path_240)) {
-        if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
+        if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
             $upload_s3 = Wo_UploadToS3($video_path_240);
         }
         $processing = 0;
@@ -8235,7 +8235,7 @@ function FFMPEGUpload($data) {
         $file_thumb = "upload/photos/" . date('Y') . '/' . date('m') . "/$hash.video_thumb_$uniq_id" . ".jpeg";
         $thumb      = $dir . "/" . $file_thumb;
         shell_exec("$ffmpeg_b -ss \"$time\" -i $video_file_full_path -vframes 1 -f mjpeg $thumb 2<&1");
-        if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
+        if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
             $upload_s3 = Wo_UploadToS3($file_thumb);
         }
         $db->where('id', $data['id'])->update(T_POSTS, array(
@@ -8245,7 +8245,7 @@ function FFMPEGUpload($data) {
     if ($resolution >= 640 || $resolution == 0) {
         $shell = shell_exec("$ffmpeg_b -y -i $video_file_full_path -vcodec libx264 -preset " . $wo['config']['convert_speed'] . " -filter:v scale=640:-2 -crf 26 $video_output_full_path_360 2>&1");
         if (file_exists($video_output_full_path_360)) {
-            if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
+            if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
                 $upload_s3 = Wo_UploadToS3($video_path_360);
             }
             $db->where('id', $data['id'])->update(T_POSTS, array(
@@ -8256,7 +8256,7 @@ function FFMPEGUpload($data) {
     if ($resolution >= 854 || $resolution == 0) {
         $shell = shell_exec("$ffmpeg_b -y -i $video_file_full_path -vcodec libx264 -preset " . $wo['config']['convert_speed'] . " -filter:v scale=854:-2 -crf 26 $video_output_full_path_480 2>&1");
         if (file_exists($video_output_full_path_480)) {
-            if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
+            if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
                 $upload_s3 = Wo_UploadToS3($video_path_480);
             }
             $db->where('id', $data['id'])->update(T_POSTS, array(
@@ -8267,7 +8267,7 @@ function FFMPEGUpload($data) {
     if ($resolution >= 1280 || $resolution == 0) {
         $shell = shell_exec("$ffmpeg_b -y -i $video_file_full_path -vcodec libx264 -preset " . $wo['config']['convert_speed'] . " -filter:v scale=1280:-2 -crf 26 $video_output_full_path_720 2>&1");
         if (file_exists($video_output_full_path_720)) {
-            if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
+            if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
                 $upload_s3 = Wo_UploadToS3($video_path_720);
             }
             $db->where('id', $data['id'])->update(T_POSTS, array(
@@ -8278,7 +8278,7 @@ function FFMPEGUpload($data) {
     if ($resolution >= 1920 || $resolution == 0) {
         $shell = shell_exec("$ffmpeg_b -y -i $video_file_full_path -vcodec libx264 -preset " . $wo['config']['convert_speed'] . " -filter:v scale=1920:-2 -crf 26 $video_output_full_path_1080 2>&1");
         if (file_exists($video_output_full_path_1080)) {
-            if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
+            if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
                 $upload_s3 = Wo_UploadToS3($video_path_1080);
             }
             $db->where('id', $data['id'])->update(T_POSTS, array(
@@ -8289,7 +8289,7 @@ function FFMPEGUpload($data) {
     if ($resolution >= 2048 || $resolution == 0) {
         $shell = shell_exec("$ffmpeg_b -y -i $video_file_full_path -vcodec libx264 -preset " . $wo['config']['convert_speed'] . " -filter:v scale=2048:-2 -crf 26 $video_output_full_path_2048 2>&1");
         if (file_exists($video_output_full_path_2048)) {
-            if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
+            if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
                 $upload_s3 = Wo_UploadToS3($video_path_2048);
             }
             $db->where('id', $data['id'])->update(T_POSTS, array(
@@ -8300,7 +8300,7 @@ function FFMPEGUpload($data) {
     if ($resolution >= 3840 || $resolution == 0) {
         $shell = shell_exec("$ffmpeg_b -y -i $video_file_full_path -vcodec libx264 -preset " . $wo['config']['convert_speed'] . " -filter:v scale=3840:-2 -crf 26 $video_output_full_path_4096 2>&1");
         if (file_exists($video_output_full_path_4096)) {
-            if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
+            if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) {
                 $upload_s3 = Wo_UploadToS3($video_path_4096);
             }
             $db->where('id', $data['id'])->update(T_POSTS, array(

@@ -249,7 +249,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                 $photo_file = $color->image;
                 if (file_exists($photo_file)) {
                     @unlink(trim($photo_file));
-                } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                     @Wo_DeleteFromToS3($photo_file);
                 }
             }
@@ -612,7 +612,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
             if (file_exists($photo_file)) {
                 @unlink(trim($photo_file));
 			 
-            } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+            } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                 @Wo_DeleteFromToS3($photo_file);
             }
             $data = array(
@@ -1155,7 +1155,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                         if (file_exists($link)) {
                             @unlink(trim($link));
 						 
-                        } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                        } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                             @Wo_DeleteFromToS3($link);
                         }
                         $db->where('gender_id', Wo_Secure($value))->delete(T_GENDER);
@@ -1955,7 +1955,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                     if (file_exists($link)) {
                         @unlink(trim($link));
 					 
-                    } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                    } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                         @Wo_DeleteFromToS3($link);
                     }
                     $_POST['image'] = '';
@@ -1963,7 +1963,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                     if (file_exists($link)) {
                         @unlink(trim($link));
 					 
-                    } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                    } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                         @Wo_DeleteFromToS3($link);
                     }
                     $_POST['night_image'] = '';
@@ -2289,7 +2289,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                         if (file_exists($link)) {
                             @unlink(trim($link));
 						 
-                        } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                        } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                             @Wo_DeleteFromToS3($link);
                         }
                         $db->where('gender_id', $lang_key)->update(T_GENDER, array(
@@ -2311,7 +2311,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                     if (file_exists($link)) {
                         @unlink(trim($link));
 					 
-                    } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                    } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                         @Wo_DeleteFromToS3($link);
                     }
                     $db->where('gender_id', $lang_key)->delete(T_GENDER);
@@ -2378,7 +2378,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                 $link = $gender->image;
                 if (file_exists($link)) {
                     @unlink(trim($link));
-                } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                     @Wo_DeleteFromToS3($link);
                 }
                 $db->where('gender_id', Wo_Secure($_GET['key']))->delete(T_GENDER);
@@ -2985,6 +2985,9 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                         if ($wo['config']['amazone_s3'] == 1) {
                             $saveSetting = Wo_SaveConfig('amazone_s3', 0);
                         }
+                        if ($wo['config']['contabo_storage'] == 1) {
+                            $saveSetting = Wo_SaveConfig('contabo_storage', 0);
+                        }
                         if ($wo['config']['wasabi_storage'] == 1) {
                             $saveSetting = Wo_SaveConfig('wasabi_storage', 0);
                         }
@@ -3022,6 +3025,8 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                         }
                         if ($wo['config']['amazone_s3'] == 1) {
                             $saveSetting = Wo_SaveConfig('amazone_s3', 0);
+                        }if ($wo['config']['contabo_storage'] == 1) {
+                            $saveSetting = Wo_SaveConfig('contabo_storage', 0);
                         }
                         if ($wo['config']['cloud_upload'] == 1) {
                             $saveSetting = Wo_SaveConfig('cloud_upload', 0);
@@ -3038,6 +3043,8 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                         }
                         if ($wo['config']['amazone_s3'] == 1) {
                             $saveSetting = Wo_SaveConfig('amazone_s3', 0);
+                        }if ($wo['config']['contabo_storage'] == 1) {
+                            $saveSetting = Wo_SaveConfig('contabo_storage', 0);
                         }
                         if ($wo['config']['spaces'] == 1) {
                             $saveSetting = Wo_SaveConfig('spaces', 0);
@@ -3054,6 +3061,8 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                         }
                         if ($wo['config']['amazone_s3'] == 1) {
                             $saveSetting = Wo_SaveConfig('amazone_s3', 0);
+                        }if ($wo['config']['contabo_storage'] == 1) {
+                            $saveSetting = Wo_SaveConfig('contabo_storage', 0);
                         }
                         if ($wo['config']['spaces'] == 1) {
                             $saveSetting = Wo_SaveConfig('spaces', 0);
@@ -3420,6 +3429,76 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
             } else {
                 $data['status'] = 500;
             }
+        } catch (Exception $e) {
+            $data['status'] = 400;
+            $data['message'] = $e->getMessage();
+        }
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+    }
+    if ($s == 'test_contabo') {
+        include_once('assets/libraries/s3/vendor/autoload.php');
+        try {
+            $s3Client= new S3Client([
+                'version' => 'latest',
+                'region'  => $wo['config']['contabo_bucket_region'],
+                "endpoint" =>'https://eu2.contabostorage.com/',
+                'credentials' => array(
+                    'key' => $wo['config']['contabo_access_key'],
+                    'secret' => $wo['config']['contabo_secret_key']
+                ),
+                'use_path_style_endpoint' => true
+            ]);
+            $buckets = $s3Client->listBuckets();
+            $result = $s3Client->putBucketCors(array(
+                'Bucket' => $wo['config']['contabo_bucket_name'], // REQUIRED
+                'CORSConfiguration' => array(// REQUIRED
+                    'CORSRules' => array(// REQUIRED
+                        array(
+                            'AllowedHeaders' => array(
+                                'Authorization'
+                            ),
+                            'AllowedMethods' => array(
+                                'POST',
+                                'GET',
+                                'PUT'
+                            ), // REQUIRED
+                            'AllowedOrigins' => array(
+                                '*'
+                            ), // REQUIRED
+                            'ExposeHeaders' => array(),
+                            'MaxAgeSeconds' => 3000
+                        )
+                    )
+                )
+            ));
+            if (!empty($buckets)) {
+                if ($s3Client->doesBucketExist($wo['config']['contabo_bucket_name'])) {
+                    $data['status'] = 200;
+                    $array = array(
+                        'upload/photos/d-avatar.jpg',
+                        'upload/photos/f-avatar.jpg',
+                        'upload/photos/d-cover.jpg',
+                        'upload/photos/d-group.jpg',
+                        'upload/photos/d-page.jpg',
+                        'upload/photos/d-blog.jpg',
+                        'upload/photos/game-icon.png',
+                        'upload/photos/d-film.jpg',
+                        'upload/photos/incognito.png',
+                        'upload/photos/app-default-icon.png'
+                    );
+                    foreach ($array as $key => $value) {
+                        $upload = Wo_UploadToS3($value, array(
+                            'delete' => 'no'
+                        ));
+                    }
+                } else {
+                    $data['status'] = 300;
+                }
+            } else {
+                $data['status'] = 500;
+          }
         } catch (Exception $e) {
             $data['status'] = 400;
             $data['message'] = $e->getMessage();
@@ -4592,25 +4671,25 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                 $sunshine_small = $explode3[0] . '_small.' . $explode2;
                 if (file_exists($wowonder_small)) {
                     @unlink(trim($wowonder_small));
-                } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                     @Wo_DeleteFromToS3($wowonder_small);
                 }
 
                 if (file_exists($sunshine_small)) {
                     @unlink(trim($sunshine_small));
-                } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                     @Wo_DeleteFromToS3($sunshine_small);
                 }
 
                 if (file_exists($reaction->wowonder_icon)) {
                     @unlink(trim($reaction->wowonder_icon));
-                } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                     @Wo_DeleteFromToS3($reaction->wowonder_icon);
                 }
 
                 if (file_exists($reaction->sunshine_icon)) {
                     @unlink(trim($reaction->sunshine_icon));
-                } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                     @Wo_DeleteFromToS3($reaction->sunshine_icon);
                 }
                 $db->where('lang_key', $reaction->name)->delete(T_LANGS);
@@ -4745,13 +4824,13 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                     $wowonder_small = $explode3[0] . '_small.' . $explode2;
                     if (file_exists($reaction->wowonder_icon)) {
                         @unlink(trim($reaction->wowonder_icon));
-                    } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                    } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['ftp_upload'] == 1) {
                         @Wo_DeleteFromToS3($reaction->wowonder_icon);
                     }
 
                     if (file_exists($wowonder_small)) {
                         @unlink(trim($wowonder_small));
-                    } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                    } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['ftp_upload'] == 1) {
                         @Wo_DeleteFromToS3($wowonder_small);
                     }
                     $update_data['wowonder_icon'] = '';
@@ -4765,13 +4844,13 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
 
                     if (file_exists($sunshine_small)) {
                         @unlink(trim($sunshine_small));
-                    } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                    } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['ftp_upload'] == 1) {
                         @Wo_DeleteFromToS3($sunshine_small);
                     }
 
                     if (file_exists($reaction->sunshine_icon)) {
                         @unlink(trim($reaction->sunshine_icon));
-                    } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['ftp_upload'] == 1) {
+                    } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['ftp_upload'] == 1) {
                         @Wo_DeleteFromToS3($reaction->sunshine_icon);
                     }
                     $update_data['sunshine_icon'] = '';

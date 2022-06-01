@@ -1365,7 +1365,13 @@ function Wo_GetMedia($media) {
             return $wo['config']['site_url'] . '/' . $media;
         }
         return $wo['config']['s3_site_url'] . '/' . $media;
-    } elseif ($wo['config']['wasabi_storage'] == 1) {
+    }elseif ($wo['config']['contabo_storage'] == 1) {
+        if (empty($wo['config']['contabo_access_key']) || empty($wo['config']['contabo_secret_key']) || empty($wo['config']['contabo_bucket_region']) || empty($wo['config']['contabo_bucket_name'])) {
+            return $wo['config']['site_url'] . '/' . $media;
+        }
+        return $wo['config']['contabo_site_url'] . '/' . $media;
+    }
+    elseif ($wo['config']['wasabi_storage'] == 1) {
         if (empty($wo['config']['wasabi_bucket_name']) || empty($wo['config']['wasabi_access_key']) || empty($wo['config']['wasabi_secret_key']) || empty($wo['config']['wasabi_bucket_region'])) {
             return $wo['config']['site_url'] . '/' . $media;
         }
@@ -4868,7 +4874,7 @@ function Wo_ShareFile($data = array(), $type = 0, $crop = true) {
                             watermark_image($last_file);
                         }
                         if (empty($data['local_upload'])) {
-                            if (($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) && !empty($last_file)) {
+                            if (($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) && !empty($last_file)) {
                                 $upload_s3 = Wo_UploadToS3($last_file);
                             }
                         }
@@ -4887,7 +4893,7 @@ function Wo_ShareFile($data = array(), $type = 0, $crop = true) {
             $crop_image = Wo_Resize_Crop_Image($data['crop']['width'], $data['crop']['height'], $filename, $filename, 60);
         }
         if (empty($data['local_upload'])) {
-            if (($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) && !empty($filename)) {
+            if (($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1 || $wo['config']['spaces'] == 1 || $wo['config']['cloud_upload'] == 1) && !empty($filename)) {
                 $upload_s3 = Wo_UploadToS3($filename);
             }
         }
@@ -6439,14 +6445,14 @@ function Wo_DeletePost($post_id = 0, $type = '') {
         if (!empty($fetched_data['postFileThumb']) && !$is_post_shared && !$is_this_post_shared) {
             if (file_exists($fetched_data['postFileThumb'])) {
                 @unlink(trim($fetched_data['postFileThumb']));
-            } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+            } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                 @Wo_DeleteFromToS3($fetched_data['postFileThumb']);
             }
         }
         if (!empty($fetched_data['postRecord']) && !$is_post_shared && !$is_this_post_shared) {
             if (file_exists($fetched_data['postRecord'])) {
                 @unlink(trim($fetched_data['postRecord']));
-            } else if ($wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
+            } else if ($wo['config']['contabo_storage'] == 1 || $wo['config']['amazone_s3'] == 1 || $wo['config']['wasabi_storage'] == 1 || $wo['config']['ftp_upload'] == 1) {
                 @Wo_DeleteFromToS3($fetched_data['postRecord']);
             }
         }
